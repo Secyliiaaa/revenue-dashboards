@@ -239,6 +239,28 @@ if page == "Dashboard":
         """, unsafe_allow_html=True
     )
 
+    # Prepare data for download
+    dashboard_table = pd.DataFrame({
+        'Province': df_pred.index,
+        'Actual Year': actual_year,
+        'Predicted Year': prediction_year,
+        'Actual Revenue': df_actual_year[actual_year],
+        'Predicted Revenue': df_pred[prediction_year],
+        'Percentage Change': [
+            calculate_percentage_change(df_pred.at[prov, prediction_year], df_actual_year.at[prov, actual_year])
+            for prov in df_pred.index
+        ]
+    })
+
+    # Add Download button for dashboard data
+    csv_dashboard = dashboard_table.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="Download Dashboard Data",
+        data=csv_dashboard,
+        file_name='dashboard_revenue_data.csv',
+        mime='text/csv'
+    )
+
 # ------------------------------------------------------------------------------
 
 elif page == "Actual Data":
