@@ -341,9 +341,20 @@ elif page == "Actual Data":
 
     # Display figures
     st.plotly_chart(fig_province, use_container_width=True)
+    csv_province = revenue_by_province.to_csv().encode('utf-8')
+    st.download_button(label="Download Data (Province)", data=csv_province, file_name='revenue_by_province.csv', mime='text/csv')
+
     st.plotly_chart(fig_product, use_container_width=True)
+    csv_product = revenue_by_product.to_csv().encode('utf-8')
+    st.download_button(label="Download Data (Product)", data=csv_product, file_name='revenue_by_product.csv', mime='text/csv')
+
     st.plotly_chart(fig_agent, use_container_width=True)
+    csv_agent = revenue_by_agent.to_csv().encode('utf-8')
+    st.download_button(label="Download Data (Agent)", data=csv_agent, file_name='revenue_by_agent.csv', mime='text/csv')
+
     st.plotly_chart(fig_ae, use_container_width=True)
+    csv_ae = revenue_by_ae.to_csv().encode('utf-8')
+    st.download_button(label="Download Data (AE)", data=csv_ae, file_name='revenue_by_ae.csv', mime='text/csv')
 
 # ------------------------------------------------------------------------------
 
