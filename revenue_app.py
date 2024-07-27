@@ -247,7 +247,7 @@ if page == "Dashboard":
         'Actual Revenue': df_actual_year[actual_year],
         'Predicted Revenue': df_pred[prediction_year],
         'Percentage Change': [
-            calculate_percentage_change(df_pred.at[prov, prediction_year], df_actual_year.at[prov, actual_year])
+            f"{100 * calculate_percentage_change(df_pred.at[prov, prediction_year], df_actual_year.at[prov, actual_year]):.2f}%"
             for prov in df_pred.index
         ]
     })
