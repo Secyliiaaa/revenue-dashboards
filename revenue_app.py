@@ -29,6 +29,55 @@ revenue_by_product = data.groupby(['month', 'namaproduk'])['totalharga'].sum().u
 revenue_by_agent = data.groupby(['month', 'mitraagen'])['totalharga'].sum().unstack().fillna(0)
 revenue_by_ae = data.groupby(['month', 'ae'])['totalharga'].sum().unstack().fillna(0)
 
+# Data harga paket ICONNET di 2022 dan 2023 
+data_harga = {
+    'Provinsi': ['BALI', 'BALI', 'BALI', 'BALI', 'BALI', 
+                 'NUSA TENGGARA TIMUR', 'NUSA TENGGARA TIMUR', 'NUSA TENGGARA TIMUR', 'NUSA TENGGARA TIMUR', 'NUSA TENGGARA TIMUR', 
+                 'NUSA TENGGARA BARAT', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA BARAT'] * 4,
+    'Nama_Layanan': ['ICONNET 10 MBPS', 'ICONNET 20 MBPS', 'ICONNET 35 MBPS', 'ICONNET 50 MBPS', 'ICONNET 100 MBPS',
+                     'ICONNET 10 MBPS', 'ICONNET 20 MBPS', 'ICONNET 35 MBPS', 'ICONNET 50 MBPS', 'ICONNET 100 MBPS',
+                     'ICONNET 10 MBPS', 'ICONNET 20 MBPS', 'ICONNET 35 MBPS', 'ICONNET 50 MBPS', 'ICONNET 100 MBPS'] * 4,
+    'Agen': ['iconplus', 'iconplus', 'iconplus', 'iconplus', 'iconplus',
+             'haleyora', 'haleyora', 'haleyora', 'haleyora', 'haleyora',
+             'kinarya', 'kinarya', 'kinarya', 'kinarya', 'kinarya',
+             'saputra', 'saputra', 'saputra', 'saputra', 'saputra'] * 3,
+    'Harga_2022': [140000, 188000, 230000, 336000, 536000, 
+                   166500, 217560, 290000, 459540, 753690,
+                   150000, 196000, 290000, 414000, 679000,
+                   150000, 196000, 290000, 414000, 679000] * 3,
+    'Harga_2023': [188000, 212000, 230000, 336000, 536000, 
+                   196000, 287000, 290000, 414000, 679000,
+                   196000, 287000, 290000, 414000, 679000,
+                   196000, 287000, 290000, 414000, 679000] * 3
+}
+
+# Convert dictionary to DataFrame
+df_harga = pd.DataFrame(data_harga)
+
+# Define features and targets for harga
+X_harga = df_harga[['Harga_2022', 'Harga_2023']].values
+
+# Generate targets for 2024, 2025, and 2026 with assumed growth rates
+np.random.seed(42)
+y_harga_2024 = (df_harga['Harga_2023'] * np.random.uniform(1.05, 1.15, df_harga.shape[0])).astype(int)
+y_harga_2025 = (y_harga_2024 * np.random.uniform(1.05, 1.15, df_harga.shape[0])).astype(int)
+y_harga_2026 = (y_harga_2025 * np.random.uniform(1.05, 1.15, df_harga.shape[0])).astype(int)
+
+# Train decision tree models for harga
+model_harga_2024 = DecisionTreeRegressor(random_state=42)
+model_harga_2024.fit(X_harga, y_harga_2024)
+
+model_harga_2025 = DecisionTreeRegressor(random_state=42)
+model_harga_2025.fit(X_harga, y_harga_2025)
+
+model_harga_2026 = DecisionTreeRegressor(random_state=42)
+model_harga_2026.fit(X_harga, y_harga_2026)
+
+# Predict future harga
+df_harga['pred_harga_2024'] = model_harga_2024.predict(X_harga).astype(int)
+df_harga['pred_harga_2025'] = model_harga_2025.predict(X_harga).astype(int)
+df_harga['pred_harga_2026'] = model_harga_2026.predict(X_harga).astype(int)
+
 # Data for actual and predicted revenue
 data_2022 = {
     'Province': ['BALI', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA TIMUR'],
@@ -42,9 +91,9 @@ data_2023 = {
 
 predicted_data = {
     'Province': ['BALI', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA TIMUR'],
-    '2024': [9881050833, 3599877853, 4125092421],
-    '2025': [10966640866, 3836036550, 4395696223],
-    '2026': [11578671120, 4360106712, 4879712932]
+    '2024': [322194404700, 120537268425, 92469032460],
+    '2025': [346179942900, 129510581475, 99352825220],
+    '2026': [371602158300, 139021374825, 106648940940]
 }
 
 df_actual_2022 = pd.DataFrame(data_2022).set_index('Province')
