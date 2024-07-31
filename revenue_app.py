@@ -27,7 +27,6 @@ data['month'] = data['tanggal'].dt.strftime('%Y-%m')
 revenue_by_province = data.groupby(['month', 'namakp'])['totalharga'].sum().unstack().fillna(0)
 revenue_by_product = data.groupby(['month', 'namaproduk'])['totalharga'].sum().unstack().fillna(0)
 revenue_by_agent = data.groupby(['month', 'mitraagen'])['totalharga'].sum().unstack().fillna(0)
-revenue_by_ae = data.groupby(['month', 'ae'])['totalharga'].sum().unstack().fillna(0)
 
 # Data for actual and predicted revenue
 data_2022 = {
