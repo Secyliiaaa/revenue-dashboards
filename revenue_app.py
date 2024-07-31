@@ -455,7 +455,7 @@ if page == "Predictor":
 
         # Calculate total predicted revenue
         total_revenue = predicted_price * subscription_length * num_customers
-        return predicted_price, total_revenue
+        return total_revenue
 
     if st.button("Predict"):
         missing_options = [
@@ -477,6 +477,5 @@ if page == "Predictor":
 
             # Summary and Analysis
             st.subheader("Summary and Analysis")
-            st.write(f"Prediksi harga untuk {product} di tahun {prediction_year} adalah Rp {predicted_price:,.2f}.")
             st.write(f"Prediksi pendapatan untuk {num_customers} pelanggan yang berlangganan {product} selama {subscription_length} bulan di {province} adalah Rp {predicted_total_revenue:,.2f}. Kinerja yang kuat ini menyoroti nilai produk dan efektivitas {agent} sebagai agen.")
             
