@@ -419,48 +419,38 @@ elif page == "Predictor":
     )
 
     # Define the prediction function
-    def predict_total_revenue(year, province, product, agent, subscription_length, actual_data, predicted_data, actual_data_2023, num_customers):
-        # Filter actual data for the selected province
-        actual_revenue_province = actual_data.loc[actual_data['namakp'] == province]
+    def predict_total_revenue(year, province, product, agent, subscription_length, actual_data, num_customers):
+        # Filter actual data for the selected province, product, and agent
+        filtered_data = actual_data[(actual_data['Provinsi'] == province) & 
+                                    (actual_data['Nama_Layanan'] == product) & 
+                                    (actual_data['Agen'] == agent)]
 
-        # Filter actual data for the selected product
-        actual_revenue_product = actual_revenue_province.loc[actual_revenue_province['namaproduk'] == product]
-
-        # Filter actual data for the selected agent
-        actual_revenue_agent = actual_revenue_product.loc[actual_revenue_product['mitraagen'] == agent]
+        # Ensure there is data available for the selected filters
+        if filtered_data.empty:
+            return 0
 
         # Calculate the average revenue per month for the filtered data
-        average_revenue_per_month = actual_revenue_agent['totalharga'].mean() / actual_revenue_agent['lamaberlangganan'].mean()
+        filtered_data = filtered_data.dropna(subset=['Harga_2023'])
+        filtered_data['Harga_2023'] = filtered_data['Harga_2023'].str.replace(',', '').astype(float)
+        average_revenue_per_month = filtered_data['Harga_2023'].mean()
 
-        # Get the total predicted revenue for the selected year and province
-        total_predicted_revenue = predicted_data.loc[province, str(year)]
-
-        # Get the total actual revenue for the base year (2023)
-        total_actual_revenue = actual_data_2023.loc[province, '2023']
-
-        # Calculate the scaling factor based on the ratio of total predicted revenue to total actual revenue
-        scaling_factor = total_predicted_revenue / total_actual_revenue
-
-        # Scale the average revenue per month
-        scaled_average_revenue_per_month = average_revenue_per_month * scaling_factor
+        # Get the predicted price for the selected year
+        predicted_price_col = f'pred_harga_{year}'
+        if predicted_price_col not in filtered_data.columns:
+            return 0
+        
+        predicted_data = filtered_data[predicted_price_col].str.replace(',', '').astype(float)
+        predicted_revenue_per_month = predicted_data.mean()
 
         # Calculate the predicted revenue per customer based on the selected subscription length
-        predicted_revenue_per_customer = scaled_average_revenue_per_month * subscription_length
+        predicted_revenue_per_customer = predicted_revenue_per_month * subscription_length
 
         # Calculate the total predicted revenue based on the number of customers
         total_predicted_revenue = predicted_revenue_per_customer * num_customers
 
-        # Penanganan untuk data yang hilang
-        actual_revenue_agent = actual_revenue_agent.dropna(subset=['totalharga', 'lamaberlangganan'])
-
-        # Menghindari pembagian dengan nol
-        mean_subscription_length = actual_revenue_agent['lamaberlangganan'].mean()
-        average_revenue_per_month = actual_revenue_agent['totalharga'].mean() / mean_subscription_length if mean_subscription_length != 0 else 0
-        predicted_revenue_per_customer = average_revenue_per_month * subscription_length
-
         return total_predicted_revenue
 
-    if st.button("Predict Revenue"):
+    if st.button("Predict"):
         missing_options = [
             "prediction year" if prediction_year == "" else None,
             "province" if province == "" else None,
@@ -473,7 +463,7 @@ elif page == "Predictor":
             st.warning(f"Please select the following options before predicting: {', '.join(missing_options)}")
         else:
             # Calculate predicted revenue
-            predicted_total_revenue = predict_total_revenue(prediction_year, province, product, agent, subscription_length, data, df_pred, df_actual_2023, num_customers)
+            predicted_total_revenue = predict_total_revenue(prediction_year, province, product, agent, subscription_length, data, num_customers)
 
             # Display the predicted revenue
             st.metric(label="Total Revenue Prediction", value=f"Rp {predicted_total_revenue:,.2f}")
@@ -482,9 +472,9 @@ elif page == "Predictor":
             st.subheader("Summary and Analysis")
 
             # Comparison with Average Revenue
-            all_product_avg_revenue = data['totalharga'].mean()
-            all_province_avg_revenue = data.groupby('namakp')['totalharga'].mean()[province]
-            all_agent_avg_revenue = data.groupby('mitraagen')['totalharga'].mean()[agent]
+            all_product_avg_revenue = data['Harga_2023'].str.replace(',', '').astype(float).mean()
+            all_province_avg_revenue = data[data['Provinsi'] == province]['Harga_2023'].str.replace(',', '').astype(float).mean()
+            all_agent_avg_revenue = data[data['Agen'] == agent]['Harga_2023'].str.replace(',', '').astype(float).mean()
 
             product_comparison = ((predicted_total_revenue - all_product_avg_revenue) / all_product_avg_revenue) * 100
             province_comparison = ((predicted_total_revenue - all_province_avg_revenue) / all_province_avg_revenue) * 100
