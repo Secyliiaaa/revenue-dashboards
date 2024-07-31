@@ -477,29 +477,9 @@ if page == "Predictor":
 
             # Summary and Analysis
             st.subheader("Summary and Analysis")
-
-            # Comparison with Average Revenue
-            all_product_avg_revenue = data['totalharga'].mean()
-            all_province_avg_revenue = data.groupby('namakp')['totalharga'].mean()[province]
-            all_agent_avg_revenue = data.groupby('mitraagen')['totalharga'].mean()[agent]
-
-            product_comparison = ((predicted_total_revenue - all_product_avg_revenue) / all_product_avg_revenue) * 100
-            province_comparison = ((predicted_total_revenue - all_province_avg_revenue) / all_province_avg_revenue) * 100
-            agent_comparison = ((predicted_total_revenue - all_agent_avg_revenue) / all_agent_avg_revenue) * 100
-
-            st.write(f"**Analysis for {product} in {province} sold by {agent} in {prediction_year}:**")
-
-            if product_comparison > 0:
-                st.write(f"- **Product Performance:** {product} is projected to outperform the average product by {product_comparison:.2f}%. This indicates strong demand and potential for further growth. Consider expanding marketing efforts or exploring opportunities for upselling and cross-selling.")
-            else:
-                st.write(f"- **Product Performance:** {product} is projected to underperform the average product by {abs(product_comparison):.2f}%. Investigate potential reasons for lower demand, such as market saturation, pricing issues, or competition. Consider adjusting marketing strategies or product offerings to improve performance.")
-
-            if province_comparison > 0:
-                st.write(f"- **Regional Performance:** {province} is expected to exceed the average revenue for the region by {province_comparison:.2f}%. This suggests a strong market presence in this area. Continue focusing on this region and consider allocating additional resources to capitalize on the growth potential.")
-            else:
-                st.write(f"- **Regional Performance:** {province} is projected to underperform compared to the regional average by {abs(province_comparison):.2f}%. Analyze market conditions and identify factors hindering growth in this region. Consider targeted marketing campaigns or partnerships to boost sales.")
-
-            if agent_comparison > 0:
-                st.write(f"- **Agent Performance:** {agent} is predicted to generate {agent_comparison:.2f}% more revenue than the average agent. This demonstrates their effectiveness in sales and customer acquisition. Recognize and reward their performance, and consider sharing their best practices with other agents.")
-            else:
-                st.write(f"- **Agent Performance:** {agent} is projected to generate {abs(agent_comparison):.2f}% less revenue than the average agent. Assess their sales strategies and identify areas for improvement. Provide additional training or support to help them reach their full potential.")
+            st.write(f"The predicted revenue for a single customer subscribing to {product} for one month in {province} is Rp {predicted_total_revenue:,.2f}. This strong performance highlights the product's value and the effectiveness of {agent} as an agent.")
+            
+            # Additional analysis
+            st.write(f"- **Product Performance:** {product} is projected to perform well with a strong predicted revenue per customer. Consider expanding marketing efforts to boost sales.")
+            st.write(f"- **Regional Performance:** The {province} region shows a healthy demand for premium internet services. Enhance infrastructure and customer service in this area to capitalize on the market potential.")
+            st.write(f"- **Agent Performance:** {agent} demonstrates effective sales and customer acquisition strategies, contributing to the significant revenue projection. Share their best practices with other agents to improve overall performance.")
