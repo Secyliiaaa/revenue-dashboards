@@ -29,6 +29,10 @@ revenue_by_product = data.groupby(['month', 'namaproduk'])['totalharga'].sum().u
 revenue_by_agent = data.groupby(['month', 'mitraagen'])['totalharga'].sum().unstack().fillna(0)
 revenue_by_ae = data.groupby(['month', 'ae'])['totalharga'].sum().unstack().fillna(0)
 
+# Load prediction data
+prediction_file_path = '/mnt/data/hargaproduk_prediksi.xlsx'
+prediction_data = pd.read_excel(prediction_file_path)
+
 # Data for actual and predicted revenue
 data_2022 = {
     'Province': ['BALI', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA TIMUR'],
@@ -450,7 +454,7 @@ elif page == "Predictor":
 
         return total_predicted_revenue
 
-    if st.button("Predict"):
+    if st.button("Predict Revenue"):
         missing_options = [
             "prediction year" if prediction_year == "" else None,
             "province" if province == "" else None,
@@ -463,7 +467,7 @@ elif page == "Predictor":
             st.warning(f"Please select the following options before predicting: {', '.join(missing_options)}")
         else:
             # Calculate predicted revenue
-            predicted_total_revenue = predict_total_revenue(prediction_year, province, product, agent, subscription_length, data, num_customers)
+            predicted_total_revenue = predict_total_revenue(prediction_year, province, product, agent, subscription_length, prediction_data, num_customers)
 
             # Display the predicted revenue
             st.metric(label="Total Revenue Prediction", value=f"Rp {predicted_total_revenue:,.2f}")
@@ -472,9 +476,9 @@ elif page == "Predictor":
             st.subheader("Summary and Analysis")
 
             # Comparison with Average Revenue
-            all_product_avg_revenue = data['Harga_2023'].str.replace(',', '').astype(float).mean()
-            all_province_avg_revenue = data[data['Provinsi'] == province]['Harga_2023'].str.replace(',', '').astype(float).mean()
-            all_agent_avg_revenue = data[data['Agen'] == agent]['Harga_2023'].str.replace(',', '').astype(float).mean()
+            all_product_avg_revenue = prediction_data['Harga_2023'].str.replace(',', '').astype(float).mean()
+            all_province_avg_revenue = prediction_data[prediction_data['Provinsi'] == province]['Harga_2023'].str.replace(',', '').astype(float).mean()
+            all_agent_avg_revenue = prediction_data[prediction_data['Agen'] == agent]['Harga_2023'].str.replace(',', '').astype(float).mean()
 
             product_comparison = ((predicted_total_revenue - all_product_avg_revenue) / all_product_avg_revenue) * 100
             province_comparison = ((predicted_total_revenue - all_province_avg_revenue) / all_province_avg_revenue) * 100
@@ -488,11 +492,4 @@ elif page == "Predictor":
                 st.write(f"- **Product Performance:** {product} is projected to underperform the average product by {abs(product_comparison):.2f}%. Investigate potential reasons for lower demand, such as market saturation, pricing issues, or competition. Consider adjusting marketing strategies or product offerings to improve performance.")
 
             if province_comparison > 0:
-                st.write(f"- **Regional Performance:** {province} is expected to exceed the average revenue for the region by {province_comparison:.2f}%. This suggests a strong market presence in this area. Continue focusing on this region and consider allocating additional resources to capitalize on the growth potential.")
-            else:
-                st.write(f"- **Regional Performance:** {province} is projected to underperform compared to the regional average by {abs(province_comparison):.2f}%. Analyze market conditions and identify factors hindering growth in this region. Consider targeted marketing campaigns or partnerships to boost sales.")
-
-            if agent_comparison > 0:
-                st.write(f"- **Agent Performance:** {agent} is predicted to generate {agent_comparison:.2f}% more revenue than the average agent. This demonstrates their effectiveness in sales and customer acquisition. Recognize and reward their performance, and consider sharing their best practices with other agents.")
-            else:
-                st.write(f"- **Agent Performance:** {agent} is projected to generate {abs(agent_comparison):.2f}% less revenue than the average agent. Assess their sales strategies and identify areas for improvement. Provide additional training or support to help them reach their full potential.")
+                st.write(f"- **Regional Performance:** {province} is expected to exceed the average revenue for the region by &#8203;:citation[oaicite:0]{index=0}&#8203;
