@@ -269,7 +269,6 @@ elif page == "Actual Data":
     fig_province = go.Figure()
     fig_product = go.Figure()
     fig_agent = go.Figure()
-    fig_ae = go.Figure()
 
     for province in revenue_by_province.columns:
         fig_province.add_trace(
@@ -322,23 +321,6 @@ elif page == "Actual Data":
             )
         )
 
-    for ae in revenue_by_ae.columns:
-        fig_ae.add_trace(
-            go.Scatter(
-                x=revenue_by_ae.index,
-                y=revenue_by_ae[ae],
-                mode='lines+markers',
-                name=ae,
-                hovertemplate="<br>".join(
-                    [
-                        "Month: %{x}",
-                        "Revenue: Rp %{y:,.2f}",
-                        "AE: " + ae,
-                    ]
-                )
-            )
-        )
-
     # Update layout and axes for all figures
     def update_layout(fig, title, legend_title):
         fig.update_layout(
@@ -359,7 +341,6 @@ elif page == "Actual Data":
     update_layout(fig_province, "Revenue by Province", "Province")
     update_layout(fig_product, "Revenue by Name of Product", "Product")
     update_layout(fig_agent, "Revenue by Agent Partner", "Agent")
-    update_layout(fig_ae, "Revenue by Account Executive", "AE")
 
     # Display figures
     st.plotly_chart(fig_province, use_container_width=True)
@@ -373,10 +354,6 @@ elif page == "Actual Data":
     st.plotly_chart(fig_agent, use_container_width=True)
     csv_agent = revenue_by_agent.to_csv().encode('utf-8')
     st.download_button(label="Download Data (Agent)", data=csv_agent, file_name='revenue_by_agent.csv', mime='text/csv')
-
-    st.plotly_chart(fig_ae, use_container_width=True)
-    csv_ae = revenue_by_ae.to_csv().encode('utf-8')
-    st.download_button(label="Download Data (AE)", data=csv_ae, file_name='revenue_by_ae.csv', mime='text/csv')
 
 # ------------------------------------------------------------------------------
 
