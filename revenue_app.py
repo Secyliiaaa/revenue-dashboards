@@ -476,6 +476,6 @@ if page == "Predictor":
             st.metric(label="Total Revenue Prediction", value=f"Rp {predicted_total_revenue:,.2f}")
 
             # Summary and Analysis
-            st.subheader("Summary and Analysis")
+            st.subheader("Informations")
             st.write(f"Prediksi pendapatan untuk {num_customers} pelanggan yang berlangganan {product} selama {subscription_length} bulan di {province} adalah Rp {predicted_total_revenue:,.2f}. Kinerja yang kuat ini menyoroti nilai produk dan efektivitas {agent} sebagai agen.")
             
