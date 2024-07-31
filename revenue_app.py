@@ -477,9 +477,6 @@ if page == "Predictor":
 
             # Summary and Analysis
             st.subheader("Summary and Analysis")
-            st.write(f"The predicted revenue for a single customer subscribing to {product} for one month in {province} is Rp {predicted_total_revenue:,.2f}. This strong performance highlights the product's value and the effectiveness of {agent} as an agent.")
+            st.write(f"Prediksi harga untuk {product} di tahun {prediction_year} adalah Rp {predicted_price:,.2f}.")
+            st.write(f"Prediksi pendapatan untuk {num_customers} pelanggan yang berlangganan {product} selama {subscription_length} bulan di {province} adalah Rp {predicted_total_revenue:,.2f}. Kinerja yang kuat ini menyoroti nilai produk dan efektivitas {agent} sebagai agen.")
             
-            # Additional analysis
-            st.write(f"- **Product Performance:** {product} is projected to perform well with a strong predicted revenue per customer. Consider expanding marketing efforts to boost sales.")
-            st.write(f"- **Regional Performance:** The {province} region shows a healthy demand for premium internet services. Enhance infrastructure and customer service in this area to capitalize on the market potential.")
-            st.write(f"- **Agent Performance:** {agent} demonstrates effective sales and customer acquisition strategies, contributing to the significant revenue projection. Share their best practices with other agents to improve overall performance.")
