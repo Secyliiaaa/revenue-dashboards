@@ -362,7 +362,10 @@ data = pd.read_excel(file_path)
 
 # Helper function to clean and convert prices to integers
 def clean_price(price):
-    return int(price.replace(',', ''))
+    try:
+        return int(str(price).replace(',', ''))
+    except ValueError:
+        return 0
 
 # Extract unique values for select boxes
 provinces = data['namakp'].unique()
