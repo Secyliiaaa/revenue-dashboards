@@ -455,9 +455,9 @@ if page == "Predictor":
 
         # Calculate total predicted revenue
         total_revenue = predicted_price * subscription_length * num_customers
-        return total_revenue
+        return predicted_price, total_revenue
 
-    if st.button("Predict Revenue"):
+    if st.button("Predict"):
         missing_options = [
             "prediction year" if prediction_year == "" else None,
             "province" if province == "" else None,
