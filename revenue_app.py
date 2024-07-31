@@ -29,10 +29,6 @@ revenue_by_product = data.groupby(['month', 'namaproduk'])['totalharga'].sum().u
 revenue_by_agent = data.groupby(['month', 'mitraagen'])['totalharga'].sum().unstack().fillna(0)
 revenue_by_ae = data.groupby(['month', 'ae'])['totalharga'].sum().unstack().fillna(0)
 
-# Load prediction data
-prediction_file_path = '/mnt/data/hargaproduk_prediksi.xlsx'
-prediction_data = pd.read_excel(prediction_file_path)
-
 # Data for actual and predicted revenue
 data_2022 = {
     'Province': ['BALI', 'NUSA TENGGARA BARAT', 'NUSA TENGGARA TIMUR'],
