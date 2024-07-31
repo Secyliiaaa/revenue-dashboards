@@ -360,10 +360,6 @@ elif page == "Actual Data":
 file_path = "predicted_iconnet_prices.xlsx"
 data = pd.read_excel(file_path)
 
-# Helper function to clean and convert prices to integers
-def clean_price(price):
-    return int(price.replace(',', ''))
-
 # Extract unique values for select boxes
 provinces = data['namakp'].unique()
 products = data['namaproduk'].unique()
